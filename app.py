@@ -657,7 +657,7 @@ with st.sidebar:
     st.markdown('<div style="font-size:0.75rem; color:#999; text-align:center;"><p>📱 v2.0.0</p><p>🇦🇪 Made in UAE</p></div>', unsafe_allow_html=True)
 
 # ============================================
-# DASHBOARD - WITH YOUR LOGO
+# DASHBOARD
 # ============================================
 if menu == "Dashboard":
     st.markdown("""
@@ -668,9 +668,6 @@ if menu == "Dashboard":
     </div>
     """, unsafe_allow_html=True)
     
-    # ============================================
-    # YOUR LOGO IS HERE ✅
-    # ============================================
     st.markdown("""
     <div class="brand-logo-container">
         <img src="https://raw.githubusercontent.com/ronitkapoor2k03-eng/BrandDrop/main/1a6880e5-5b56-4ee7-8ae9-18790ac679bf.jpeg" 
@@ -679,7 +676,6 @@ if menu == "Dashboard":
     </div>
     """, unsafe_allow_html=True)
     
-    # Stats Row
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         attended = len(st.session_state.claimed_experiences)
@@ -720,7 +716,6 @@ if menu == "Dashboard":
     
     st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     
-    # Stats Bar
     st.markdown("""
     <div class="stats-bar">
         <div class="stat-item">
@@ -744,7 +739,6 @@ if menu == "Dashboard":
     
     st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     
-    # Featured Experiences
     st.markdown("### 🔥 Featured Experiences")
     st.markdown("*Curated experiences based on your interests*")
     
@@ -791,7 +785,6 @@ if menu == "Dashboard":
     
     st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     
-    # Passport Progress
     st.markdown("### 📗 Experience Passport Progress")
     st.markdown("*Collect stamps and unlock achievements*")
     
@@ -843,7 +836,6 @@ if menu == "Dashboard":
             </div>
             """, unsafe_allow_html=True)
     
-    # Notifications Section
     st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     st.markdown("### 🔔 Recent Notifications")
     
@@ -1109,6 +1101,9 @@ elif menu == "Rewards":
                 else:
                     st.error("❌ Insufficient points")
 
+# ============================================
+# CLUBS - FIXED SEQUENCE ✅
+# ============================================
 elif menu == "Clubs":
     st.markdown("""
     <div class="hero-section">
@@ -1118,6 +1113,7 @@ elif menu == "Clubs":
     </div>
     """, unsafe_allow_html=True)
     
+    # Clubs in correct order
     clubs = [
         {"name": "☕ Coffee Club", "members": 234, "events": 12, "joined": st.session_state.clubs['Coffee Club']['joined']},
         {"name": "💄 Beauty Club", "members": 189, "events": 9, "joined": st.session_state.clubs['Beauty Club']['joined']},
@@ -1194,6 +1190,104 @@ elif menu == "Clubs":
                     st.session_state.clubs[club_name]['joined'] = True
                     st.success(f"✅ Joined {club['name']}!")
                     st.rerun()
+
+# ============================================
+# FOR BRANDS
+# ============================================
+elif menu == "For Brands":
+    st.markdown("""
+    <div class="hero-section">
+        <h1>🏢 For Brands</h1>
+        <p class="subtitle">Launch campaigns and measure real engagement</p>
+        <p class="tagline">Clear ROI instead of vague advertising metrics</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">👥</div>
+            <h3>1,247</h3>
+            <p class="label">Total Attendees</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">🚀</div>
+            <h3>12</h3>
+            <p class="label">Active Campaigns</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">📊</div>
+            <h3>87%</h3>
+            <p class="label">Avg. Redemption Rate</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col4:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">⭐</div>
+            <h3>4.7</h3>
+            <p class="label">Avg. Rating</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("### 🚀 Create New Campaign")
+    
+    with st.form("campaign_form"):
+        col1, col2 = st.columns(2)
+        with col1:
+            campaign_name = st.text_input("Campaign Name", "Summer Launch 2026")
+            brand_name = st.text_input("Brand Name", "Your Brand")
+            category = st.selectbox("Category", ["Beauty", "Fashion", "Food", "Coffee", "Fitness", "Tech", "Luxury"])
+            location = st.text_input("Location", "Dubai Mall")
+        with col2:
+            start_date = st.date_input("Start Date", datetime.now())
+            end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
+            capacity = st.number_input("Capacity", min_value=10, max_value=500, value=50)
+            budget = st.number_input("Budget (AED)", min_value=1000, value=5000)
+        
+        target_audience = st.multiselect(
+            "Target Audience",
+            ["Beauty Club", "Coffee Club", "Sneaker Club", "Pet Club", "Parents Club", "Foodies Club", "Gamers Club", "Fitness Club"]
+        )
+        
+        submitted = st.form_submit_button("🚀 Launch Campaign", type="primary")
+        if submitted:
+            st.success("✅ Campaign created successfully! Your experience is now live.")
+            st.balloons()
+    
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("### 📊 Campaign Performance")
+    
+    data = pd.DataFrame({
+        'Week': ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        'Reservations': [45, 67, 89, 102],
+        'Attendees': [38, 55, 72, 85],
+        'Redemptions': [30, 48, 61, 72]
+    })
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=data['Week'], y=data['Reservations'], name='Reservations', mode='lines+markers', line=dict(color='#e74c3c', width=3), marker=dict(size=10)))
+    fig.add_trace(go.Scatter(x=data['Week'], y=data['Attendees'], name='Attendees', mode='lines+markers', line=dict(color='#3498db', width=3), marker=dict(size=10)))
+    fig.add_trace(go.Scatter(x=data['Week'], y=data['Redemptions'], name='Redemptions', mode='lines+markers', line=dict(color='#2ecc71', width=3), marker=dict(size=10)))
+    fig.update_layout(
+        title='Campaign Performance Trends',
+        xaxis_title='Time Period',
+        yaxis_title='Number of Users',
+        height=400,
+        template='plotly_white',
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 # ============================================
 # TESTIMONIALS
 # ============================================
