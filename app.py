@@ -1328,7 +1328,7 @@ elif menu_clean == "For Brands":
     st.plotly_chart(fig, use_container_width=True)
 
 # ============================================
-# ABOUT - ENHANCED
+# ABOUT - FIXED VERSION
 # ============================================
 elif menu_clean == "About":
     st.markdown("""
@@ -1345,33 +1345,34 @@ elif menu_clean == "About":
         <div class="glass-card">
             <h3>🎯 Our Mission</h3>
             <p>BrandDrop is revolutionizing how brands connect with consumers in the UAE. We're replacing traditional advertising with real-world experiences that create meaningful connections and measurable engagement.</p>
-            
-            <h3>❌ The Problem We Solve</h3>
-            <ul>
-                <li>Consumers skip ads and ignore influencer promotions</li>
-                <li>Brands waste budget on activations without measuring ROI</li>
-                <li>Exciting brand experiences are scattered across multiple platforms</li>
-                <li>No single platform exists for discovering brand experiences</li>
-            </ul>
-            
-            <h3>✅ Our Solution</h3>
-            <ul>
-                <li>Single platform for discovering, booking, and engaging with brand experiences</li>
-                <li>Measurable engagement instead of just impressions</li>
-                <li>Experience Passport with achievements and rewards</li>
-                <li>Real-time analytics for brands to track campaign performance</li>
-            </ul>
-            
-            <h3>🇦🇪 Why UAE?</h3>
-            <ul>
-                <li>Retail- and mall-driven culture</li>
-                <li>Frequent product launches and brand activations</li>
-                <li>Large tourism volumes</li>
-                <li>Digitally connected population</li>
-                <li>Strong government support for innovation</li>
-            </ul>
         </div>
         """, unsafe_allow_html=True)
+        
+        # Using st.markdown with bullet points (Streamlit native)
+        st.markdown("### ❌ The Problem We Solve")
+        st.markdown("""
+        - Consumers skip ads and ignore influencer promotions
+        - Brands waste budget on activations without measuring ROI
+        - Exciting brand experiences are scattered across multiple platforms
+        - No single platform exists for discovering brand experiences
+        """)
+        
+        st.markdown("### ✅ Our Solution")
+        st.markdown("""
+        - Single platform for discovering, booking, and engaging with brand experiences
+        - Measurable engagement instead of just impressions
+        - Experience Passport with achievements and rewards
+        - Real-time analytics for brands to track campaign performance
+        """)
+        
+        st.markdown("### 🇦🇪 Why UAE?")
+        st.markdown("""
+        - Retail- and mall-driven culture
+        - Frequent product launches and brand activations
+        - Large tourism volumes
+        - Digitally connected population
+        - Strong government support for innovation
+        """)
     
     with col2:
         st.markdown("""
