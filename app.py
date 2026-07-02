@@ -501,6 +501,32 @@ st.markdown("""
         font-size: 0.8rem;
         color: #666;
     }
+    
+    .brand-logo-container {
+        text-align: center;
+        margin: 1rem 0 2rem 0;
+    }
+    
+    .brand-logo-container img {
+        max-width: 250px;
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .brand-logo-container img:hover {
+        transform: scale(1.02);
+    }
+    
+    .brand-logo-container .tagline-text {
+        font-size: 1.1rem;
+        color: #e74c3c;
+        margin-top: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -631,7 +657,7 @@ with st.sidebar:
     st.markdown('<div style="font-size:0.75rem; color:#999; text-align:center;"><p>📱 v2.0.0</p><p>🇦🇪 Made in UAE</p></div>', unsafe_allow_html=True)
 
 # ============================================
-# DASHBOARD
+# DASHBOARD - WITH YOUR LOGO
 # ============================================
 if menu == "Dashboard":
     st.markdown("""
@@ -639,6 +665,17 @@ if menu == "Dashboard":
         <h1>Welcome to BrandDrop</h1>
         <p class="subtitle">UAE's First Consumer Experience Marketplace</p>
         <p class="tagline">"Discover. Experience. Earn." — Where brands come to life.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # ============================================
+    # YOUR LOGO IS HERE ✅
+    # ============================================
+    st.markdown("""
+    <div class="brand-logo-container">
+        <img src="https://raw.githubusercontent.com/ronitkapoor2k03-eng/BrandDrop/main/1a6880e5-5b56-4ee7-8ae9-18790ac679bf.jpeg" 
+             alt="BrandDrop Logo">
+        <p class="tagline-text">DISCOVER. EXPERIENCE. EARN.</p>
     </div>
     """, unsafe_allow_html=True)
     
