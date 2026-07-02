@@ -840,5 +840,4 @@ elif menu == "My Passport":
 # ============================================
 elif menu == "Rewards":
     st.markdown("""
-    <div class="brand-header">
-       
+    <div class="brand-header
