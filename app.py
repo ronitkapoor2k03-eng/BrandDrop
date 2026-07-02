@@ -19,7 +19,6 @@ st.set_page_config(
 # ============================================
 st.markdown("""
 <style>
-    /* Main Header */
     .brand-header {
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         padding: 2rem 2.5rem;
@@ -44,8 +43,6 @@ st.markdown("""
         margin-top: 0.3rem;
         font-style: italic;
     }
-    
-    /* Experience Cards */
     .experience-card {
         background: white;
         padding: 1.5rem;
@@ -91,8 +88,6 @@ st.markdown("""
         font-weight: 600;
         color: #e74c3c;
     }
-    
-    /* Progress Bar */
     .progress-container {
         background: #e9ecef;
         height: 8px;
@@ -106,8 +101,6 @@ st.markdown("""
         border-radius: 4px;
         transition: width 0.5s ease;
     }
-    
-    /* Metric Box */
     .metric-box {
         background: #f8f9fa;
         padding: 1.2rem;
@@ -129,8 +122,6 @@ st.markdown("""
         color: #666;
         font-size: 0.9rem;
     }
-    
-    /* Passport Stamps */
     .passport-stamp {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -141,8 +132,6 @@ st.markdown("""
         font-weight: 500;
         margin: 0.2rem;
     }
-    
-    /* Achievement Cards */
     .achievement-unlocked {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         padding: 1rem 1.5rem;
@@ -171,8 +160,6 @@ st.markdown("""
         font-size: 0.9rem;
         opacity: 0.9;
     }
-    
-    /* Club Cards */
     .club-card {
         background: white;
         padding: 1.5rem;
@@ -200,8 +187,6 @@ st.markdown("""
         font-weight: 600;
         font-size: 0.9rem;
     }
-    
-    /* Developer Box */
     .developer-box {
         background: #f8f9fa;
         padding: 1.5rem;
@@ -226,8 +211,6 @@ st.markdown("""
         color: #666;
         font-size: 0.85rem;
     }
-    
-    /* Buttons */
     .stButton > button {
         background-color: #e74c3c;
         color: white;
@@ -245,8 +228,6 @@ st.markdown("""
     .stButton > button:active {
         transform: scale(0.98);
     }
-    
-    /* Sidebar */
     .sidebar-header {
         text-align: center;
         padding: 1rem 0;
@@ -278,8 +259,6 @@ st.markdown("""
         color: #e74c3c;
         font-weight: 600;
     }
-    
-    /* Footer */
     .footer {
         text-align: center;
         color: #666;
@@ -295,15 +274,11 @@ st.markdown("""
         margin: 0.3rem 0;
         font-size: 0.9rem;
     }
-    
-    /* Divider */
     .divider {
         border: none;
         border-top: 2px solid #e9ecef;
         margin: 2rem 0;
     }
-    
-    /* Form styling */
     .form-section {
         background: #f8f9fa;
         padding: 1.5rem;
@@ -317,7 +292,6 @@ st.markdown("""
 # INITIALIZE SESSION STATE
 # ============================================
 def init_session_state():
-    # User data
     if 'user' not in st.session_state:
         st.session_state.user = {
             'name': 'Ahmed Al Maktoum',
@@ -327,7 +301,6 @@ def init_session_state():
             'interests': ['Coffee', 'Fashion', 'Tech', 'Food']
         }
     
-    # Experience Passport (Key Innovation)
     if 'passport' not in st.session_state:
         st.session_state.passport = {
             'Coffee Explorer': {'count': 7, 'target': 10, 'unlocked': False},
@@ -340,7 +313,6 @@ def init_session_state():
             'Dubai Explorer': {'count': 8, 'target': 5, 'unlocked': True}
         }
     
-    # Experiences data
     if 'experiences' not in st.session_state:
         st.session_state.experiences = [
             {
@@ -473,15 +445,12 @@ def init_session_state():
             }
         ]
     
-    # Claimed experiences
     if 'claimed_experiences' not in st.session_state:
         st.session_state.claimed_experiences = [1, 4, 7]
     
-    # Reviews
     if 'reviews' not in st.session_state:
         st.session_state.reviews = {}
     
-    # Consumer Clubs
     if 'clubs' not in st.session_state:
         st.session_state.clubs = {
             'Coffee Club': {'members': 234, 'events': 12, 'joined': True},
@@ -511,15 +480,7 @@ with st.sidebar:
     
     menu = st.radio(
         "Navigate",
-        [
-            "Dashboard",
-            "Discover",
-            "My Passport",
-            "Rewards",
-            "Clubs",
-            "For Brands",
-            "About"
-        ],
+        ["Dashboard", "Discover", "My Passport", "Rewards", "Clubs", "For Brands", "About"],
         key="main_menu",
         label_visibility="collapsed"
     )
@@ -554,7 +515,6 @@ if menu == "Dashboard":
     </div>
     """, unsafe_allow_html=True)
     
-    # Quick Stats
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         attended = len(st.session_state.claimed_experiences)
@@ -592,11 +552,9 @@ if menu == "Dashboard":
     
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
     
-    # Featured Experiences
     st.markdown("### 🔥 Featured Experiences")
     st.markdown("*Curated experiences based on your interests*")
     
-    # Filter by user interests
     user_interests = [i.lower() for i in st.session_state.user['interests']]
     featured = [exp for exp in st.session_state.experiences 
                 if exp['category'].lower() in user_interests][:3]
@@ -632,7 +590,6 @@ if menu == "Dashboard":
                     if exp['id'] not in st.session_state.claimed_experiences:
                         st.session_state.claimed_experiences.append(exp['id'])
                         st.session_state.user['points'] += 20
-                        # Update passport
                         for passport_name in st.session_state.passport:
                             if exp['category'].lower() in passport_name.lower():
                                 st.session_state.passport[passport_name]['count'] += 1
@@ -641,7 +598,6 @@ if menu == "Dashboard":
     
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
     
-    # Passport Progress (Key Innovation)
     st.markdown("### 📗 Experience Passport Progress")
     st.markdown("*Collect stamps and unlock achievements*")
     
@@ -707,7 +663,6 @@ elif menu == "Discover":
     </div>
     """, unsafe_allow_html=True)
     
-    # Filters
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         category_filter = st.selectbox(
@@ -727,7 +682,6 @@ elif menu == "Discover":
     
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
     
-    # Filter experiences
     filtered = st.session_state.experiences
     if category_filter != "All":
         filtered = [e for e in filtered if e['category'] == category_filter]
@@ -773,7 +727,6 @@ elif menu == "Discover":
                         if exp['id'] not in st.session_state.claimed_experiences:
                             st.session_state.claimed_experiences.append(exp['id'])
                             st.session_state.user['points'] += 20
-                            # Update passport
                             for passport_name in st.session_state.passport:
                                 if exp['category'].lower() in passport_name.lower():
                                     st.session_state.passport[passport_name]['count'] += 1
@@ -794,7 +747,6 @@ elif menu == "My Passport":
     </div>
     """, unsafe_allow_html=True)
     
-    # Stats
     col1, col2, col3 = st.columns(3)
     with col1:
         attended = len(st.session_state.claimed_experiences)
@@ -824,7 +776,6 @@ elif menu == "My Passport":
     
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
     
-    # All Passport Stamps
     st.markdown("### ✨ Your Passport Stamps")
     
     col1, col2 = st.columns(2)
@@ -849,28 +800,45 @@ elif menu == "My Passport":
     
     st.markdown("<hr class='divider'>", unsafe_allow_html=True)
     
-    # Achievements (Key Innovation)
     st.markdown("### 🏆 Achievements")
     st.markdown("*Complete collections to unlock VIP invitations, early access, and exclusive merchandise*")
     
     achievements = [
-        {"name": "Coffee Explorer", "desc": "Visit 10 independent cafés → Unlock exclusive coffee tastings", 
-         "unlocked": st.session_state.passport['Coffee Explorer']['unlocked']},
-        {"name": "Beauty Insider", "desc": "Attend 5 beauty launches → Get early access to new products", 
-         "unlocked": st.session_state.passport['Beauty Insider']['unlocked']},
-        {"name": "Dubai Explorer", "desc": "Complete experiences across 5 malls → Earn city-wide rewards", 
-         "unlocked": st.session_state.passport['Dubai Explorer']['unlocked']},
-        {"name": "Sneaker Hunter", "desc": "Attend 3 sneaker launches → VIP access to limited editions", 
-         "unlocked": st.session_state.passport['Sneaker Hunter']['unlocked']},
-        {"name": "Food Adventurer", "desc": "Visit 10 restaurants → Exclusive dining experiences", 
-         "unlocked": st.session_state.passport['Food Adventurer']['unlocked']},
-        {"name": "Tech Enthusiast", "desc": "Attend 5 tech events → Early access to innovations", 
-         "unlocked": st.session_state.passport['Tech Enthusiast']['unlocked']},
-        {"name": "Fitness Fanatic", "desc": "Complete 5 fitness challenges → Premium wellness access", 
-         "unlocked": st.session_state.passport['Fitness Fanatic']['unlocked']}
+        {"name": "Coffee Explorer", "desc": "Visit 10 independent cafes -> Unlock exclusive coffee tastings", "unlocked": st.session_state.passport['Coffee Explorer']['unlocked']},
+        {"name": "Beauty Insider", "desc": "Attend 5 beauty launches -> Get early access to new products", "unlocked": st.session_state.passport['Beauty Insider']['unlocked']},
+        {"name": "Dubai Explorer", "desc": "Complete experiences across 5 malls -> Earn city-wide rewards", "unlocked": st.session_state.passport['Dubai Explorer']['unlocked']},
+        {"name": "Sneaker Hunter", "desc": "Attend 3 sneaker launches -> VIP access to limited editions", "unlocked": st.session_state.passport['Sneaker Hunter']['unlocked']},
+        {"name": "Food Adventurer", "desc": "Visit 10 restaurants -> Exclusive dining experiences", "unlocked": st.session_state.passport['Food Adventurer']['unlocked']},
+        {"name": "Tech Enthusiast", "desc": "Attend 5 tech events -> Early access to innovations", "unlocked": st.session_state.passport['Tech Enthusiast']['unlocked']},
+        {"name": "Fitness Fanatic", "desc": "Complete 5 fitness challenges -> Premium wellness access", "unlocked": st.session_state.passport['Fitness Fanatic']['unlocked']}
     ]
     
     for ach in achievements:
         if ach['unlocked']:
             st.markdown(f"""
-            <div class="
+            <div class="achievement-unlocked">
+                <div>
+                    <h4>✅ {ach['name']}</h4>
+                    <p>{ach['desc']}</p>
+                </div>
+                <span style="font-size:2rem;">🏆</span>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="achievement-locked">
+                <div>
+                    <h4>🔒 {ach['name']}</h4>
+                    <p>{ach['desc']}</p>
+                </div>
+                <span style="font-size:1.5rem; opacity:0.5;">🔒</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+# ============================================
+# REWARDS
+# ============================================
+elif menu == "Rewards":
+    st.markdown("""
+    <div class="brand-header">
+       
