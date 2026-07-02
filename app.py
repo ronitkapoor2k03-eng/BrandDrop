@@ -551,12 +551,12 @@ elif menu == "About":
         </div>
         <div class="developer-box">
             <h3>👨‍💻 Development Team</h3>
-            <div class="team-member"><span><strong>Ronit Kapoor</strong></span><span class="role">Lead Developer</span></div>
-            <div class="team-member"><span><strong>Syed Ali</strong></span><span class="role">Backend Engineer</span></div>
-            <div class="team-member"><span><strong>Shania Ahmed</strong></span><span class="role">UI/UX Designer</span></div>
-            <div class="team-member"><span><strong>Krishna Patel</strong></span><span class="role">Frontend Developer</span></div>
-            <div class="team-member"><span><strong>Khushil Sharma</strong></span><span class="role">Data Analyst</span></div>
-            <div class="team-member"><span><strong>Vyomika Reddy</strong></span><span class="role">QA Engineer</span></div>
+            <div class="team-member"><span><strong>Ronit</strong></span><span class="role">Lead Developer</span></div>
+            <div class="team-member"><span><strong>Syed</strong></span><span class="role">Backend Engineer</span></div>
+            <div class="team-member"><span><strong>Shania</strong></span><span class="role">UI/UX Designer</span></div>
+            <div class="team-member"><span><strong>Krishna</strong></span><span class="role">Frontend Developer</span></div>
+            <div class="team-member"><span><strong>Khushil</strong></span><span class="role">Data Analyst</span></div>
+            <div class="team-member"><span><strong>Vyomika</strong></span><span class="role">QA Engineer</span></div>
             <p style="margin-top:1rem; color:#666; font-size:0.9rem;">Built with ❤️ in Dubai, UAE<br>© 2026 BrandDrop</p>
         </div>
         """, unsafe_allow_html=True)
