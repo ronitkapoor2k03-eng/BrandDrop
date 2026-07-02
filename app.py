@@ -4,7 +4,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import random
-import time
 
 # PAGE CONFIGURATION
 st.set_page_config(
@@ -15,7 +14,7 @@ st.set_page_config(
 )
 
 # ============================================
-# CUSTOM CSS
+# CUSTOM CSS + LIVE TIMER JAVASCRIPT
 # ============================================
 st.markdown("""
 <style>
@@ -188,30 +187,44 @@ st.markdown("""
         font-weight: 500;
     }
     
+    /* LIVE COUNTDOWN TIMER STYLES */
+    .countdown-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
     .countdown-timer {
-        background: rgba(26, 26, 46, 0.9);
+        background: rgba(26, 26, 46, 0.95);
         padding: 1rem 2rem;
-        border-radius: 12px;
+        border-radius: 16px;
         color: white;
         text-align: center;
         display: inline-block;
-        border: 1px solid rgba(255,255,255,0.1);
-        min-width: 200px;
+        border: 2px solid rgba(231, 76, 60, 0.3);
+        min-width: 220px;
+        box-shadow: 0 0 30px rgba(231, 76, 60, 0.1);
     }
     
     .countdown-timer .time {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-weight: 700;
         color: #e74c3c;
         font-variant-numeric: tabular-nums;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
     }
     
     .countdown-timer .label {
         font-size: 0.7rem;
-        opacity: 0.7;
+        opacity: 0.6;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
         margin-top: 0.2rem;
     }
     
@@ -221,23 +234,24 @@ st.markdown("""
         gap: 0.5rem;
         background: #e74c3c;
         color: white;
-        padding: 0.3rem 1rem;
+        padding: 0.5rem 1.2rem;
         border-radius: 50px;
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
-        animation: blink 1.5s infinite;
+        box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
+        animation: pulse-glow 2s infinite;
     }
     
-    @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
+    @keyframes pulse-glow {
+        0% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(231, 76, 60, 0.6); }
+        100% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.3); }
     }
     
     .live-dot {
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         background: white;
         border-radius: 50%;
         display: inline-block;
@@ -246,7 +260,7 @@ st.markdown("""
     
     @keyframes pulse-dot {
         0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.5); opacity: 0.5; }
+        50% { transform: scale(1.8); opacity: 0.5; }
         100% { transform: scale(1); opacity: 1; }
     }
     
@@ -585,23 +599,46 @@ st.markdown("""
         color: #666;
     }
 </style>
-""", unsafe_allow_html=True)
 
-# ============================================
-# LIVE COUNTDOWN TIMER (WORKING)
-# ============================================
-def get_countdown():
-    """Returns remaining time until next experience drop (24-hour cycle)"""
-    now = datetime.now()
-    # Set target to next day at 12:00 PM (noon)
-    target = datetime(now.year, now.month, now.day, 12, 0, 0)
-    if now > target:
-        target += timedelta(days=1)
-    diff = target - now
-    hours = diff.seconds // 3600
-    minutes = (diff.seconds % 3600) // 60
-    seconds = diff.seconds % 60
-    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+<!-- LIVE COUNTDOWN TIMER JAVASCRIPT - UPDATES EVERY SECOND -->
+<script>
+    function startCountdown() {
+        function updateTimer() {
+            var now = new Date();
+            var target = new Date(now);
+            target.setHours(12, 0, 0, 0); // Next drop at 12:00 PM
+            
+            if (now > target) {
+                target.setDate(target.getDate() + 1);
+            }
+            
+            var diff = target - now;
+            var hours = Math.floor(diff / 3600000);
+            var minutes = Math.floor((diff % 3600000) / 60000);
+            var seconds = Math.floor((diff % 60000) / 1000);
+            
+            var timeStr = String(hours).padStart(2, '0') + ':' + 
+                         String(minutes).padStart(2, '0') + ':' + 
+                         String(seconds).padStart(2, '0');
+            
+            var timerElement = document.getElementById('countdown-time');
+            if (timerElement) {
+                timerElement.textContent = timeStr;
+            }
+        }
+        
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+    
+    // Start the timer when the page loads
+    document.addEventListener('DOMContentLoaded', startCountdown);
+    // Also start if DOM already loaded
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        startCountdown();
+    }
+</script>
+""", unsafe_allow_html=True)
 
 # ============================================
 # INITIALIZE SESSION STATE
@@ -731,25 +768,23 @@ with st.sidebar:
     st.markdown('<div style="font-size:0.75rem; color:#999; text-align:center;"><p>📱 v2.0.0</p><p>🇦🇪 Made in UAE</p></div>', unsafe_allow_html=True)
 
 # ============================================
-# DASHBOARD - WITH WORKING TIMER
+# DASHBOARD - WITH LIVE COUNTDOWN TIMER
 # ============================================
 if menu == "Dashboard":
-    # Get current countdown
-    countdown_time = get_countdown()
-    
-    st.markdown(f"""
+    st.markdown("""
     <div class="hero-section">
         <div class="hero-badge">🚀 LIVE NOW</div>
         <h1>Welcome to BrandDrop</h1>
         <p class="subtitle">UAE's First Consumer Experience Marketplace</p>
         <p class="tagline">"Discover. Experience. Earn." — Where brands come to life.</p>
-        <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; position:relative; z-index:1;">
+        
+        <div class="countdown-wrapper">
             <div class="countdown-timer">
-                <div class="time">{countdown_time}</div>
+                <div class="time" id="countdown-time">12:00:00</div>
                 <div class="label">⏰ Next Experience Drops In</div>
             </div>
-            <div style="display:flex; align-items:center;">
-                <div class="live-indicator"><span class="live-dot"></span> Live Now</div>
+            <div class="live-indicator">
+                <span class="live-dot"></span> Live Now
             </div>
         </div>
     </div>
