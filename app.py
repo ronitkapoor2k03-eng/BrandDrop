@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import random
+import time
 
 # PAGE CONFIGURATION
 st.set_page_config(
@@ -14,7 +15,7 @@ st.set_page_config(
 )
 
 # ============================================
-# CUSTOM CSS + LIVE TIMER JAVASCRIPT
+# CUSTOM CSS
 # ============================================
 st.markdown("""
 <style>
@@ -187,7 +188,6 @@ st.markdown("""
         font-weight: 500;
     }
     
-    /* LIVE COUNTDOWN TIMER STYLES */
     .countdown-wrapper {
         display: flex;
         align-items: center;
@@ -599,46 +599,22 @@ st.markdown("""
         color: #666;
     }
 </style>
-
-<!-- LIVE COUNTDOWN TIMER JAVASCRIPT - UPDATES EVERY SECOND -->
-<script>
-    function startCountdown() {
-        function updateTimer() {
-            var now = new Date();
-            var target = new Date(now);
-            target.setHours(12, 0, 0, 0); // Next drop at 12:00 PM
-            
-            if (now > target) {
-                target.setDate(target.getDate() + 1);
-            }
-            
-            var diff = target - now;
-            var hours = Math.floor(diff / 3600000);
-            var minutes = Math.floor((diff % 3600000) / 60000);
-            var seconds = Math.floor((diff % 60000) / 1000);
-            
-            var timeStr = String(hours).padStart(2, '0') + ':' + 
-                         String(minutes).padStart(2, '0') + ':' + 
-                         String(seconds).padStart(2, '0');
-            
-            var timerElement = document.getElementById('countdown-time');
-            if (timerElement) {
-                timerElement.textContent = timeStr;
-            }
-        }
-        
-        updateTimer();
-        setInterval(updateTimer, 1000);
-    }
-    
-    // Start the timer when the page loads
-    document.addEventListener('DOMContentLoaded', startCountdown);
-    // Also start if DOM already loaded
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        startCountdown();
-    }
-</script>
 """, unsafe_allow_html=True)
+
+# ============================================
+# COUNTDOWN TIMER FUNCTION (REAL-TIME)
+# ============================================
+def get_countdown():
+    """Returns remaining time until next experience drop (12:00 PM daily)"""
+    now = datetime.now()
+    target = datetime(now.year, now.month, now.day, 12, 0, 0)
+    if now > target:
+        target += timedelta(days=1)
+    diff = target - now
+    hours = diff.seconds // 3600
+    minutes = (diff.seconds % 3600) // 60
+    seconds = diff.seconds % 60
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 # ============================================
 # INITIALIZE SESSION STATE
@@ -768,9 +744,10 @@ with st.sidebar:
     st.markdown('<div style="font-size:0.75rem; color:#999; text-align:center;"><p>📱 v2.0.0</p><p>🇦🇪 Made in UAE</p></div>', unsafe_allow_html=True)
 
 # ============================================
-# DASHBOARD - WITH LIVE COUNTDOWN TIMER
+# DASHBOARD - WITH LIVE TIMER
 # ============================================
 if menu == "Dashboard":
+    # Hero Section with Timer Placeholder
     st.markdown("""
     <div class="hero-section">
         <div class="hero-badge">🚀 LIVE NOW</div>
@@ -789,6 +766,26 @@ if menu == "Dashboard":
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
+    # ============================================
+    # LIVE COUNTDOWN TIMER UPDATE LOOP
+    # ============================================
+    timer_placeholder = st.empty()
+    
+    # Update the timer every second using a loop
+    for i in range(30):  # Runs for 30 seconds, then continues
+        current_time = get_countdown()
+        timer_placeholder.markdown(f"""
+        <div class="countdown-timer" style="margin-top:-0.5rem; margin-bottom:1rem;">
+            <div class="time" style="font-size:2.8rem; font-weight:700; color:#e74c3c; font-family:'Courier New',monospace; letter-spacing:3px; text-shadow:0 0 20px rgba(231,76,60,0.3);">
+                {current_time}
+            </div>
+            <div class="label" style="font-size:0.7rem; opacity:0.6; text-transform:uppercase; letter-spacing:2px; margin-top:0.2rem;">
+                ⏰ Next Experience Drops In
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        time.sleep(1)
     
     # Stats Row
     col1, col2, col3, col4 = st.columns(4)
@@ -969,7 +966,7 @@ if menu == "Dashboard":
         """, unsafe_allow_html=True)
 
 # ============================================
-# DISCOVER - WITH FULL DESCRIPTION
+# DISCOVER
 # ============================================
 elif menu == "Discover":
     st.markdown("""
@@ -1449,7 +1446,7 @@ elif menu == "Testimonials":
             st.rerun()
 
 # ============================================
-# ABOUT - FIXED VERSION
+# ABOUT
 # ============================================
 elif menu == "About":
     st.markdown("""
