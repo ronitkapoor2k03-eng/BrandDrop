@@ -5,9 +5,6 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import random
 import time
-from PIL import Image
-import requests
-from io import BytesIO
 
 # PAGE CONFIGURATION
 st.set_page_config(
@@ -18,18 +15,16 @@ st.set_page_config(
 )
 
 # ============================================
-# CUSTOM CSS - PROFESSIONAL THEME
+# CUSTOM CSS
 # ============================================
 st.markdown("""
 <style>
-    /* Google Font Import */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     * {
         font-family: 'Inter', sans-serif;
     }
     
-    /* Animated Background Gradient */
     .stApp {
         background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
         background-size: 400% 400%;
@@ -42,7 +37,6 @@ st.markdown("""
         100% { background-position: 0% 50%; }
     }
     
-    /* Glassmorphism Effect */
     .glass-card {
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(10px);
@@ -59,7 +53,6 @@ st.markdown("""
         box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
     }
     
-    /* Hero Section */
     .hero-section {
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         padding: 3rem 3rem;
@@ -124,7 +117,6 @@ st.markdown("""
         z-index: 1;
     }
     
-    /* Experience Cards - Enhanced */
     .experience-card-enhanced {
         background: white;
         padding: 1.5rem;
@@ -136,17 +128,6 @@ st.markdown("""
         height: 100%;
         position: relative;
         overflow: hidden;
-    }
-    
-    .experience-card-enhanced::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100px;
-        height: 100px;
-        background: radial-gradient(circle, rgba(231, 76, 60, 0.05) 0%, transparent 70%);
-        border-radius: 50%;
     }
     
     .experience-card-enhanced:hover {
@@ -166,7 +147,13 @@ st.markdown("""
         letter-spacing: 0.5px;
     }
     
-    /* Metric Cards with Icons */
+    .experience-card-enhanced .full-description {
+        color: #444;
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+        line-height: 1.6;
+    }
+    
     .metric-card-enhanced {
         background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(10px);
@@ -201,7 +188,324 @@ st.markdown("""
         font-weight: 500;
     }
     
-    /* Testimonial Cards */
+    .countdown-timer {
+        background: rgba(26, 26, 46, 0.9);
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid rgba(255,255,255,0.1);
+        min-width: 200px;
+    }
+    
+    .countdown-timer .time {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #e74c3c;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 2px;
+    }
+    
+    .countdown-timer .label {
+        font-size: 0.7rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0.2rem;
+    }
+    
+    .live-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #e74c3c;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        animation: blink 1.5s infinite;
+    }
+    
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse-dot 1s infinite;
+    }
+    
+    @keyframes pulse-dot {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .progress-container {
+        background: #e9ecef;
+        height: 8px;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        background: linear-gradient(90deg, #e74c3c, #c0392b);
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
+    
+    .passport-stamp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.3rem 1.2rem;
+        border-radius: 20px;
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin: 0.2rem;
+    }
+    
+    .achievement-unlocked {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        color: white;
+        margin: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .achievement-locked {
+        background: #f1f3f5;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin: 0.5rem 0;
+        opacity: 0.6;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .achievement-locked h4, .achievement-unlocked h4 {
+        margin: 0;
+    }
+    
+    .achievement-locked p, .achievement-unlocked p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .club-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        text-align: center;
+        border: 1px solid #e9ecef;
+        transition: transform 0.2s;
+        height: 100%;
+    }
+    
+    .club-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    
+    .club-card h3 {
+        margin: 0.5rem 0;
+        color: #1a1a2e;
+    }
+    
+    .club-card .member-count {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .club-card .event-count {
+        color: #e74c3c;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .developer-box {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border-left: 4px solid #e74c3c;
+        margin-top: 1rem;
+    }
+    
+    .developer-box h3 {
+        margin-top: 0;
+        color: #1a1a2e;
+    }
+    
+    .developer-box .team-member {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.3rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .developer-box .team-member:last-child {
+        border-bottom: none;
+    }
+    
+    .stButton > button {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 0.6rem 2rem;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(231, 76, 60, 0.4);
+    }
+    
+    .sidebar-header {
+        text-align: center;
+        padding: 1rem 0;
+    }
+    
+    .sidebar-header h1 {
+        color: #e74c3c;
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    
+    .sidebar-header p {
+        color: #666;
+        margin: 0;
+        font-size: 0.85rem;
+    }
+    
+    .sidebar-user {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    
+    .sidebar-user p {
+        margin: 0.2rem 0;
+    }
+    
+    .sidebar-user .name {
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+    
+    .sidebar-user .points {
+        color: #e74c3c;
+        font-weight: 600;
+    }
+    
+    .sidebar-profile .avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e74c3c, #f39c12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin: 0 auto 0.5rem auto;
+        box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+    }
+    
+    .sidebar-profile .name {
+        font-weight: 700;
+        color: #1a1a2e;
+        font-size: 1.1rem;
+    }
+    
+    .sidebar-profile .level {
+        color: #666;
+        font-size: 0.85rem;
+    }
+    
+    .sidebar-profile .points {
+        color: #e74c3c;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+    
+    .footer-enhanced {
+        text-align: center;
+        padding: 2rem 0 1rem 0;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        margin-top: 2rem;
+    }
+    
+    .footer-enhanced .brand {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1a1a2e;
+    }
+    
+    .footer-enhanced .brand span {
+        color: #e74c3c;
+    }
+    
+    .footer-enhanced .tagline {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .divider-glow {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e74c3c, transparent);
+        margin: 2rem 0;
+        opacity: 0.3;
+    }
+    
+    .notification-bell {
+        background: #e74c3c;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .full-description-text {
+        color: #444;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin: 0.5rem 0;
+    }
+    
     .testimonial-card {
         background: white;
         padding: 2rem;
@@ -255,124 +559,6 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     
-    /* Countdown Timer */
-    .countdown-timer {
-        background: linear-gradient(135deg, #1a1a2e, #16213e);
-        padding: 1rem 2rem;
-        border-radius: 12px;
-        color: white;
-        text-align: center;
-        display: inline-block;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .countdown-timer .time {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #e74c3c;
-    }
-    
-    .countdown-timer .label {
-        font-size: 0.7rem;
-        opacity: 0.7;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    /* Notification Bell */
-    .notification-bell {
-        background: #e74c3c;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-    
-    /* Progress Ring */
-    .progress-ring {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: conic-gradient(#e74c3c calc(var(--progress) * 1%), #e9ecef calc(var(--progress) * 1%));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-    }
-    
-    .progress-ring .inner {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #1a1a2e;
-    }
-    
-    /* Live Indicator */
-    .live-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: #e74c3c;
-        color: white;
-        padding: 0.3rem 1rem;
-        border-radius: 50px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        animation: blink 1.5s infinite;
-    }
-    
-    @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
-    
-    .live-dot {
-        width: 8px;
-        height: 8px;
-        background: white;
-        border-radius: 50%;
-        display: inline-block;
-        animation: pulse-dot 1s infinite;
-    }
-    
-    @keyframes pulse-dot {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.5); opacity: 0.5; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    
-    /* Badge */
-    .feature-badge {
-        background: linear-gradient(135deg, #f093fb, #f5576c);
-        color: white;
-        padding: 0.2rem 0.8rem;
-        border-radius: 50px;
-        font-size: 0.6rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    /* Stats Bar */
     .stats-bar {
         display: flex;
         justify-content: space-around;
@@ -398,115 +584,24 @@ st.markdown("""
         font-size: 0.8rem;
         color: #666;
     }
-    
-    /* Sidebar Enhancement */
-    .sidebar-profile {
-        text-align: center;
-        padding: 1.5rem 0;
-    }
-    
-    .sidebar-profile .avatar-large {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #e74c3c, #f39c12);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        color: white;
-        margin: 0 auto 0.5rem auto;
-        box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
-    }
-    
-    .sidebar-profile .name {
-        font-weight: 700;
-        color: #1a1a2e;
-        font-size: 1.1rem;
-    }
-    
-    .sidebar-profile .level {
-        color: #666;
-        font-size: 0.85rem;
-    }
-    
-    .sidebar-profile .points {
-        color: #e74c3c;
-        font-weight: 700;
-        font-size: 1.2rem;
-    }
-    
-    /* Footer */
-    .footer-enhanced {
-        text-align: center;
-        padding: 2rem 0 1rem 0;
-        border-top: 1px solid rgba(0,0,0,0.05);
-        margin-top: 2rem;
-    }
-    
-    .footer-enhanced .brand {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: #1a1a2e;
-    }
-    
-    .footer-enhanced .brand span {
-        color: #e74c3c;
-    }
-    
-    .footer-enhanced .tagline {
-        color: #666;
-        font-size: 0.9rem;
-    }
-    
-    /* Buttons */
-    .stButton > button {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
-        border: none;
-        border-radius: 50px;
-        padding: 0.6rem 2rem;
-        font-weight: 600;
-        width: 100%;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(231, 76, 60, 0.4);
-    }
-    
-    .stButton > button:active {
-        transform: scale(0.98);
-    }
-    
-    /* Divider */
-    .divider-glow {
-        border: none;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #e74c3c, transparent);
-        margin: 2rem 0;
-        opacity: 0.3;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .hero-section h1 { font-size: 2rem; }
-        .hero-section { padding: 2rem; }
-        .stats-bar { flex-wrap: wrap; gap: 1rem; }
-    }
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================
-# LIVE COUNTER ANIMATION (Simulated)
+# LIVE COUNTDOWN TIMER (WORKING)
 # ============================================
-def live_counter():
-    if 'counter' not in st.session_state:
-        st.session_state.counter = 1247
-    st.session_state.counter += random.randint(1, 3)
-    return st.session_state.counter
+def get_countdown():
+    """Returns remaining time until next experience drop (24-hour cycle)"""
+    now = datetime.now()
+    # Set target to next day at 12:00 PM (noon)
+    target = datetime(now.year, now.month, now.day, 12, 0, 0)
+    if now > target:
+        target += timedelta(days=1)
+    diff = target - now
+    hours = diff.seconds // 3600
+    minutes = (diff.seconds % 3600) // 60
+    seconds = diff.seconds % 60
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 # ============================================
 # INITIALIZE SESSION STATE
@@ -573,7 +668,7 @@ def init_session_state():
     
     if 'testimonials' not in st.session_state:
         st.session_state.testimonials = [
-            {'name': 'Sara', 'role': 'Beauty Enthusiast', 'quote': 'BrandDrop has completely changed how I discover new products. I\'ve attended 5 exclusive launches this month!', 'stars': 5, 'avatar': '💄'},
+            {'name': 'Sara', 'role': 'Beauty Enthusiast', 'quote': 'BrandDrop has completely changed how I discover new products. I have attended 5 exclusive launches this month!', 'stars': 5, 'avatar': '💄'},
             {'name': 'Mohammed', 'role': 'Coffee Lover', 'quote': 'The Coffee Brewing Masterclass was incredible. I learned techniques I never knew existed!', 'stars': 5, 'avatar': '☕'},
             {'name': 'Fatima', 'role': 'Fashion Influencer', 'quote': 'I discovered the Sneaker Launch event through BrandDrop. The VIP access was a game-changer!', 'stars': 4, 'avatar': '👗'},
             {'name': 'Khalid', 'role': 'Tech Enthusiast', 'quote': 'The Tech Innovation Showcase was mind-blowing. Got to try VR and AI demos before anyone else.', 'stars': 5, 'avatar': '💻'}
@@ -582,7 +677,7 @@ def init_session_state():
 init_session_state()
 
 # ============================================
-# SIDEBAR - ENHANCED
+# SIDEBAR NAVIGATION
 # ============================================
 with st.sidebar:
     st.markdown("""
@@ -603,13 +698,10 @@ with st.sidebar:
     
     menu = st.radio(
         "Navigate",
-        ["🏠 Dashboard", "📍 Discover", "📗 Passport", "🏆 Rewards", "👥 Clubs", "🏢 For Brands", "💬 Testimonials", "ℹ️ About"],
+        ["Dashboard", "Discover", "Passport", "Rewards", "Clubs", "For Brands", "Testimonials", "About"],
         key="main_menu",
         label_visibility="collapsed"
     )
-    
-    # Clean menu name
-    menu_clean = menu.replace("🏠 ", "").replace("📍 ", "").replace("📗 ", "").replace("🏆 ", "").replace("👥 ", "").replace("🏢 ", "").replace("💬 ", "").replace("ℹ️ ", "")
     
     st.markdown("---")
     
@@ -617,20 +709,15 @@ with st.sidebar:
     st.markdown("""
     <div style="background:rgba(255,255,255,0.1); padding:1rem; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
         <div style="display:flex; justify-content:space-between;">
-            <div><span style="color:#666;">👥</span><br><span style="font-weight:700; color:#1a1a2e;">{}</span></div>
-            <div><span style="color:#666;">🎯</span><br><span style="font-weight:700; color:#1a1a2e;">{}</span></div>
-            <div><span style="color:#666;">⭐</span><br><span style="font-weight:700; color:#1a1a2e;">{}</span></div>
+            <div><span style="color:#666;">👥</span><br><span style="font-weight:700; color:#1a1a2e;">5,247</span></div>
+            <div><span style="color:#666;">🎯</span><br><span style="font-weight:700; color:#1a1a2e;">287</span></div>
+            <div><span style="color:#666;">⭐</span><br><span style="font-weight:700; color:#1a1a2e;">4.7</span></div>
         </div>
     </div>
-    """.format(
-        f"{random.randint(5000, 6000):,}",
-        f"{random.randint(200, 300)}",
-        "4.7"
-    ), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Notification Bell
     unread = sum(1 for n in st.session_state.notifications if not n['read'])
     st.markdown(f"""
     <div style="text-align:center;">
@@ -644,20 +731,22 @@ with st.sidebar:
     st.markdown('<div style="font-size:0.75rem; color:#999; text-align:center;"><p>📱 v2.0.0</p><p>🇦🇪 Made in UAE</p></div>', unsafe_allow_html=True)
 
 # ============================================
-# DASHBOARD - ENHANCED
+# DASHBOARD - WITH WORKING TIMER
 # ============================================
-if menu_clean == "Dashboard":
-    # Hero Section
-    st.markdown("""
+if menu == "Dashboard":
+    # Get current countdown
+    countdown_time = get_countdown()
+    
+    st.markdown(f"""
     <div class="hero-section">
         <div class="hero-badge">🚀 LIVE NOW</div>
         <h1>Welcome to BrandDrop</h1>
         <p class="subtitle">UAE's First Consumer Experience Marketplace</p>
         <p class="tagline">"Discover. Experience. Earn." — Where brands come to life.</p>
-        <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap; position:relative; z-index:1;">
+        <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; position:relative; z-index:1;">
             <div class="countdown-timer">
-                <div class="time">12:34:56</div>
-                <div class="label">Next Experience Drops In</div>
+                <div class="time">{countdown_time}</div>
+                <div class="label">⏰ Next Experience Drops In</div>
             </div>
             <div style="display:flex; align-items:center;">
                 <div class="live-indicator"><span class="live-dot"></span> Live Now</div>
@@ -731,7 +820,7 @@ if menu_clean == "Dashboard":
     
     st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     
-    # Featured Experiences with Enhanced Cards
+    # Featured Experiences with FULL description
     st.markdown("### 🔥 Featured Experiences")
     st.markdown("*Curated experiences based on your interests*")
     
@@ -751,15 +840,15 @@ if menu_clean == "Dashboard":
                     <span class="badge-type">{exp['type']}</span>
                 </div>
                 <h4 style="margin:0.5rem 0 0 0;">{exp['title']}</h4>
-                <p class="brand-name">{exp['brand']}</p>
-                <p class="meta">📍 {exp['location']} • 📅 {exp['date']}</p>
-                <p class="meta">⏰ {exp['time']}</p>
-                <p class="description">{exp['description'][:80]}...</p>
+                <p class="brand-name" style="color:#e74c3c; font-weight:600;">{exp['brand']}</p>
+                <p class="meta" style="color:#666; font-size:0.9rem;">📍 {exp['location']} • 📅 {exp['date']}</p>
+                <p class="meta" style="color:#666; font-size:0.9rem;">⏰ {exp['time']}</p>
+                <div class="full-description-text">{exp['description']}</div>
                 <div class="progress-container">
                     <div class="progress-fill" style="width:{progress}%;"></div>
                 </div>
-                <p class="spots">{available} spots remaining</p>
-                <p class="rating">⭐ {exp['rating']} ({exp['reviews']} reviews)</p>
+                <p class="spots" style="font-weight:600; color:#2ecc71;">{available} spots remaining</p>
+                <p class="rating" style="color:#f39c12; font-weight:600;">⭐ {exp['rating']} ({exp['reviews']} reviews)</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -845,9 +934,9 @@ if menu_clean == "Dashboard":
         """, unsafe_allow_html=True)
 
 # ============================================
-# DISCOVER - ENHANCED
+# DISCOVER - WITH FULL DESCRIPTION
 # ============================================
-elif menu_clean == "Discover":
+elif menu == "Discover":
     st.markdown("""
     <div class="hero-section">
         <h1>📍 Discover Experiences</h1>
@@ -891,7 +980,7 @@ elif menu_clean == "Discover":
                     <h4 style="margin:0.5rem 0 0 0;">{exp['title']}</h4>
                     <p style="color:#e74c3c; font-weight:500;">{exp['brand']} • {exp['category']}</p>
                     <p style="font-size:0.9rem;">📍 {exp['location']} • 📅 {exp['date']} at {exp['time']}</p>
-                    <p style="font-size:0.9rem; color:#555;">{exp['description']}</p>
+                    <div class="full-description-text">{exp['description']}</div>
                     <p class="rating">⭐ {exp['rating']} ({exp['reviews']} reviews)</p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -929,9 +1018,9 @@ elif menu_clean == "Discover":
                     """, unsafe_allow_html=True)
 
 # ============================================
-# PASSPORT - ENHANCED
+# PASSPORT
 # ============================================
-elif menu_clean == "Passport":
+elif menu == "Passport":
     st.markdown("""
     <div class="hero-section">
         <h1>📗 My Experience Passport</h1>
@@ -1030,9 +1119,9 @@ elif menu_clean == "Passport":
             """, unsafe_allow_html=True)
 
 # ============================================
-# REWARDS - ENHANCED
+# REWARDS
 # ============================================
-elif menu_clean == "Rewards":
+elif menu == "Rewards":
     st.markdown("""
     <div class="hero-section">
         <h1>🏆 Rewards & Benefits</h1>
@@ -1097,9 +1186,9 @@ elif menu_clean == "Rewards":
                     st.error("❌ Insufficient points")
 
 # ============================================
-# CLUBS - ENHANCED
+# CLUBS
 # ============================================
-elif menu_clean == "Clubs":
+elif menu == "Clubs":
     st.markdown("""
     <div class="hero-section">
         <h1>👥 Consumer Clubs</h1>
@@ -1141,99 +1230,9 @@ elif menu_clean == "Clubs":
                     st.rerun()
 
 # ============================================
-# TESTIMONIALS - NEW SECTION
+# FOR BRANDS
 # ============================================
-elif menu_clean == "Testimonials":
-    st.markdown("""
-    <div class="hero-section">
-        <h1>💬 What Our Community Says</h1>
-        <p class="subtitle">Real stories from real BrandDrop users</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Stats
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">⭐</div>
-            <h2>4.7</h2>
-            <p class="label">Average Rating</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">📝</div>
-            <h2>1,247</h2>
-            <p class="label">Reviews</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">👥</div>
-            <h2>5K+</h2>
-            <p class="label">Happy Users</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with col4:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">🏆</div>
-            <h2>98%</h2>
-            <p class="label">Would Recommend</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
-    st.markdown("### 💬 User Testimonials")
-    
-    # Display testimonials in a 2x2 grid
-    cols = st.columns(2)
-    for idx, testimonial in enumerate(st.session_state.testimonials):
-        with cols[idx % 2]:
-            stars = "⭐" * testimonial['stars']
-            st.markdown(f"""
-            <div class="testimonial-card">
-                <div class="avatar">{testimonial['avatar']}</div>
-                <div class="stars">{stars}</div>
-                <p class="quote">"{testimonial['quote']}"</p>
-                <p class="author">{testimonial['name']}</p>
-                <p class="role-text">{testimonial['role']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    # Add your own testimonial form
-    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
-    st.markdown("### ✍️ Share Your Experience")
-    
-    with st.form("testimonial_form"):
-        col1, col2 = st.columns(2)
-        with col1:
-            name = st.text_input("Your Name", placeholder="Enter your name")
-            role = st.text_input("Your Role", placeholder="e.g., Coffee Lover, Fashion Enthusiast")
-        with col2:
-            rating = st.select_slider("Rating", options=[1, 2, 3, 4, 5], value=5)
-            testimonial_text = st.text_area("Your Testimonial", placeholder="Share your BrandDrop experience...")
-        
-        submitted = st.form_submit_button("Submit Testimonial", type="primary")
-        if submitted and name and testimonial_text:
-            st.session_state.testimonials.append({
-                'name': name,
-                'role': role or "BrandDrop User",
-                'quote': testimonial_text,
-                'stars': rating,
-                'avatar': random.choice(["😊", "🌟", "✨", "💫", "👏"])
-            })
-            st.success("✅ Thank you! Your testimonial has been added.")
-            st.balloons()
-            st.rerun()
-
-# ============================================
-# FOR BRANDS - ENHANCED
-# ============================================
-elif menu_clean == "For Brands":
+elif menu == "For Brands":
     st.markdown("""
     <div class="hero-section">
         <h1>🏢 For Brands</h1>
@@ -1328,9 +1327,96 @@ elif menu_clean == "For Brands":
     st.plotly_chart(fig, use_container_width=True)
 
 # ============================================
+# TESTIMONIALS
+# ============================================
+elif menu == "Testimonials":
+    st.markdown("""
+    <div class="hero-section">
+        <h1>💬 What Our Community Says</h1>
+        <p class="subtitle">Real stories from real BrandDrop users</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">⭐</div>
+            <h2>4.7</h2>
+            <p class="label">Average Rating</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">📝</div>
+            <h2>1,247</h2>
+            <p class="label">Reviews</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">👥</div>
+            <h2>5K+</h2>
+            <p class="label">Happy Users</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col4:
+        st.markdown("""
+        <div class="metric-card-enhanced">
+            <div class="icon">🏆</div>
+            <h2>98%</h2>
+            <p class="label">Would Recommend</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("### 💬 User Testimonials")
+    
+    cols = st.columns(2)
+    for idx, testimonial in enumerate(st.session_state.testimonials):
+        with cols[idx % 2]:
+            stars = "⭐" * testimonial['stars']
+            st.markdown(f"""
+            <div class="testimonial-card">
+                <div class="avatar">{testimonial['avatar']}</div>
+                <div class="stars">{stars}</div>
+                <p class="quote">"{testimonial['quote']}"</p>
+                <p class="author">{testimonial['name']}</p>
+                <p class="role-text">{testimonial['role']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("### ✍️ Share Your Experience")
+    
+    with st.form("testimonial_form"):
+        col1, col2 = st.columns(2)
+        with col1:
+            name = st.text_input("Your Name", placeholder="Enter your name")
+            role = st.text_input("Your Role", placeholder="e.g., Coffee Lover, Fashion Enthusiast")
+        with col2:
+            rating = st.select_slider("Rating", options=[1, 2, 3, 4, 5], value=5)
+            testimonial_text = st.text_area("Your Testimonial", placeholder="Share your BrandDrop experience...")
+        
+        submitted = st.form_submit_button("Submit Testimonial", type="primary")
+        if submitted and name and testimonial_text:
+            st.session_state.testimonials.append({
+                'name': name,
+                'role': role or "BrandDrop User",
+                'quote': testimonial_text,
+                'stars': rating,
+                'avatar': random.choice(["😊", "🌟", "✨", "💫", "👏"])
+            })
+            st.success("✅ Thank you! Your testimonial has been added.")
+            st.balloons()
+            st.rerun()
+
+# ============================================
 # ABOUT - FIXED VERSION
 # ============================================
-elif menu_clean == "About":
+elif menu == "About":
     st.markdown("""
     <div class="hero-section">
         <h1>ℹ️ About BrandDrop</h1>
@@ -1348,7 +1434,6 @@ elif menu_clean == "About":
         </div>
         """, unsafe_allow_html=True)
         
-        # Using st.markdown with bullet points (Streamlit native)
         st.markdown("### ❌ The Problem We Solve")
         st.markdown("""
         - Consumers skip ads and ignore influencer promotions
@@ -1413,7 +1498,7 @@ elif menu_clean == "About":
         """, unsafe_allow_html=True)
 
 # ============================================
-# FOOTER - ENHANCED
+# FOOTER
 # ============================================
 st.markdown("""
 <div class="footer-enhanced">
