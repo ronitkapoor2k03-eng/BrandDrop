@@ -310,16 +310,6 @@ st.markdown("""
         border-radius: 10px;
         border: 1px solid #e9ecef;
     }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .brand-header h1 {
-            font-size: 2rem;
-        }
-        .brand-header {
-            padding: 1.5rem;
-        }
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -522,20 +512,17 @@ with st.sidebar:
     menu = st.radio(
         "Navigate",
         [
-            "🏠 Dashboard",
-            "📍 Discover",
-            "📗 My Passport",
-            "🏆 Rewards",
-            "👥 Clubs",
-            "🏢 For Brands",
-            "ℹ️ About"
+            "Dashboard",
+            "Discover",
+            "My Passport",
+            "Rewards",
+            "Clubs",
+            "For Brands",
+            "About"
         ],
         key="main_menu",
         label_visibility="collapsed"
     )
-    
-    # Clean menu name for logic
-    menu_clean = menu.replace("🏠 ", "").replace("📍 ", "").replace("📗 ", "").replace("🏆 ", "").replace("👥 ", "").replace("🏢 ", "").replace("ℹ️ ", "")
     
     st.markdown("---")
     
@@ -558,7 +545,7 @@ with st.sidebar:
 # ============================================
 # DASHBOARD
 # ============================================
-if menu_clean == "Dashboard":
+if menu == "Dashboard":
     st.markdown("""
     <div class="brand-header">
         <h1>Welcome to BrandDrop</h1>
@@ -660,7 +647,6 @@ if menu_clean == "Dashboard":
     
     col1, col2 = st.columns([2, 1])
     with col1:
-        # Show top 4 passport entries
         for idx, (category, data) in enumerate(list(st.session_state.passport.items())[:4]):
             progress = min(data['count'] / data['target'], 1)
             status = "✅" if data['unlocked'] else "🔒"
@@ -677,7 +663,6 @@ if menu_clean == "Dashboard":
             """, unsafe_allow_html=True)
     
     with col2:
-        # Next achievement
         next_ach = None
         for name, data in st.session_state.passport.items():
             if not data['unlocked']:
@@ -713,7 +698,7 @@ if menu_clean == "Dashboard":
 # ============================================
 # DISCOVER
 # ============================================
-elif menu_clean == "Discover":
+elif menu == "Discover":
     st.markdown("""
     <div class="brand-header">
         <h1>📍 Discover Experiences</h1>
@@ -800,7 +785,7 @@ elif menu_clean == "Discover":
 # ============================================
 # MY PASSPORT
 # ============================================
-elif menu_clean == "My Passport":
+elif menu == "My Passport":
     st.markdown("""
     <div class="brand-header">
         <h1>📗 My Experience Passport</h1>
@@ -876,4 +861,16 @@ elif menu_clean == "My Passport":
         {"name": "Dubai Explorer", "desc": "Complete experiences across 5 malls → Earn city-wide rewards", 
          "unlocked": st.session_state.passport['Dubai Explorer']['unlocked']},
         {"name": "Sneaker Hunter", "desc": "Attend 3 sneaker launches → VIP access to limited editions", 
-         "unlocked": st.session_state.passport['Sneaker Hunter']['un
+         "unlocked": st.session_state.passport['Sneaker Hunter']['unlocked']},
+        {"name": "Food Adventurer", "desc": "Visit 10 restaurants → Exclusive dining experiences", 
+         "unlocked": st.session_state.passport['Food Adventurer']['unlocked']},
+        {"name": "Tech Enthusiast", "desc": "Attend 5 tech events → Early access to innovations", 
+         "unlocked": st.session_state.passport['Tech Enthusiast']['unlocked']},
+        {"name": "Fitness Fanatic", "desc": "Complete 5 fitness challenges → Premium wellness access", 
+         "unlocked": st.session_state.passport['Fitness Fanatic']['unlocked']}
+    ]
+    
+    for ach in achievements:
+        if ach['unlocked']:
+            st.markdown(f"""
+            <div class="
