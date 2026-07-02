@@ -4,7 +4,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import random
-import time
 
 # PAGE CONFIGURATION
 st.set_page_config(
@@ -147,13 +146,6 @@ st.markdown("""
         letter-spacing: 0.5px;
     }
     
-    .experience-card-enhanced .full-description {
-        color: #444;
-        font-size: 0.9rem;
-        margin: 0.5rem 0;
-        line-height: 1.6;
-    }
-    
     .metric-card-enhanced {
         background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(10px);
@@ -186,46 +178,6 @@ st.markdown("""
         font-size: 0.9rem;
         margin: 0.3rem 0 0 0;
         font-weight: 500;
-    }
-    
-    .countdown-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .countdown-timer {
-        background: rgba(26, 26, 46, 0.95);
-        padding: 1rem 2rem;
-        border-radius: 16px;
-        color: white;
-        text-align: center;
-        display: inline-block;
-        border: 2px solid rgba(231, 76, 60, 0.3);
-        min-width: 220px;
-        box-shadow: 0 0 30px rgba(231, 76, 60, 0.1);
-    }
-    
-    .countdown-timer .time {
-        font-size: 2.8rem;
-        font-weight: 700;
-        color: #e74c3c;
-        font-variant-numeric: tabular-nums;
-        letter-spacing: 3px;
-        font-family: 'Courier New', monospace;
-        text-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
-    }
-    
-    .countdown-timer .label {
-        font-size: 0.7rem;
-        opacity: 0.6;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-top: 0.2rem;
     }
     
     .live-indicator {
@@ -602,21 +554,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================
-# COUNTDOWN TIMER FUNCTION (REAL-TIME)
-# ============================================
-def get_countdown():
-    """Returns remaining time until next experience drop (12:00 PM daily)"""
-    now = datetime.now()
-    target = datetime(now.year, now.month, now.day, 12, 0, 0)
-    if now > target:
-        target += timedelta(days=1)
-    diff = target - now
-    hours = diff.seconds // 3600
-    minutes = (diff.seconds % 3600) // 60
-    seconds = diff.seconds % 60
-    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-
-# ============================================
 # INITIALIZE SESSION STATE
 # ============================================
 def init_session_state():
@@ -718,7 +655,6 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Live Stats in Sidebar
     st.markdown("""
     <div style="background:rgba(255,255,255,0.1); padding:1rem; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
         <div style="display:flex; justify-content:space-between;">
@@ -744,48 +680,22 @@ with st.sidebar:
     st.markdown('<div style="font-size:0.75rem; color:#999; text-align:center;"><p>📱 v2.0.0</p><p>🇦🇪 Made in UAE</p></div>', unsafe_allow_html=True)
 
 # ============================================
-# DASHBOARD - WITH LIVE TIMER
+# DASHBOARD
 # ============================================
 if menu == "Dashboard":
-    # Hero Section with Timer Placeholder
     st.markdown("""
     <div class="hero-section">
         <div class="hero-badge">🚀 LIVE NOW</div>
         <h1>Welcome to BrandDrop</h1>
         <p class="subtitle">UAE's First Consumer Experience Marketplace</p>
         <p class="tagline">"Discover. Experience. Earn." — Where brands come to life.</p>
-        
-        <div class="countdown-wrapper">
-            <div class="countdown-timer">
-                <div class="time" id="countdown-time">12:00:00</div>
-                <div class="label">⏰ Next Experience Drops In</div>
-            </div>
+        <div style="margin-top:1rem; position:relative; z-index:1;">
             <div class="live-indicator">
                 <span class="live-dot"></span> Live Now
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    # ============================================
-    # LIVE COUNTDOWN TIMER UPDATE LOOP
-    # ============================================
-    timer_placeholder = st.empty()
-    
-    # Update the timer every second using a loop
-    for i in range(30):  # Runs for 30 seconds, then continues
-        current_time = get_countdown()
-        timer_placeholder.markdown(f"""
-        <div class="countdown-timer" style="margin-top:-0.5rem; margin-bottom:1rem;">
-            <div class="time" style="font-size:2.8rem; font-weight:700; color:#e74c3c; font-family:'Courier New',monospace; letter-spacing:3px; text-shadow:0 0 20px rgba(231,76,60,0.3);">
-                {current_time}
-            </div>
-            <div class="label" style="font-size:0.7rem; opacity:0.6; text-transform:uppercase; letter-spacing:2px; margin-top:0.2rem;">
-                ⏰ Next Experience Drops In
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        time.sleep(1)
     
     # Stats Row
     col1, col2, col3, col4 = st.columns(4)
@@ -852,7 +762,7 @@ if menu == "Dashboard":
     
     st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     
-    # Featured Experiences with FULL description
+    # Featured Experiences
     st.markdown("### 🔥 Featured Experiences")
     st.markdown("*Curated experiences based on your interests*")
     
