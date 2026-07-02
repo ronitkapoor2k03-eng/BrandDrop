@@ -103,19 +103,6 @@ st.markdown("""
         z-index: 1;
     }
     
-    .hero-badge {
-        display: inline-block;
-        background: rgba(231, 76, 60, 0.3);
-        border: 1px solid rgba(231, 76, 60, 0.5);
-        padding: 0.3rem 1.2rem;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        color: #e74c3c;
-        font-weight: 600;
-        position: relative;
-        z-index: 1;
-    }
-    
     .experience-card-enhanced {
         background: white;
         padding: 1.5rem;
@@ -178,42 +165,6 @@ st.markdown("""
         font-size: 0.9rem;
         margin: 0.3rem 0 0 0;
         font-weight: 500;
-    }
-    
-    .live-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: #e74c3c;
-        color: white;
-        padding: 0.5rem 1.2rem;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
-        animation: pulse-glow 2s infinite;
-    }
-    
-    @keyframes pulse-glow {
-        0% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.3); }
-        50% { box-shadow: 0 0 40px rgba(231, 76, 60, 0.6); }
-        100% { box-shadow: 0 0 20px rgba(231, 76, 60, 0.3); }
-    }
-    
-    .live-dot {
-        width: 10px;
-        height: 10px;
-        background: white;
-        border-radius: 50%;
-        display: inline-block;
-        animation: pulse-dot 1s infinite;
-    }
-    
-    @keyframes pulse-dot {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.8); opacity: 0.5; }
-        100% { transform: scale(1); opacity: 1; }
     }
     
     .progress-container {
@@ -685,15 +636,9 @@ with st.sidebar:
 if menu == "Dashboard":
     st.markdown("""
     <div class="hero-section">
-        <div class="hero-badge">🚀 LIVE NOW</div>
         <h1>Welcome to BrandDrop</h1>
         <p class="subtitle">UAE's First Consumer Experience Marketplace</p>
         <p class="tagline">"Discover. Experience. Earn." — Where brands come to life.</p>
-        <div style="margin-top:1rem; position:relative; z-index:1;">
-            <div class="live-indicator">
-                <span class="live-dot"></span> Live Now
-            </div>
-        </div>
     </div>
     """, unsafe_allow_html=True)
     
