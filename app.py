@@ -1109,9 +1109,6 @@ elif menu == "Rewards":
                 else:
                     st.error("❌ Insufficient points")
 
-# ============================================
-# CLUBS
-# ============================================
 elif menu == "Clubs":
     st.markdown("""
     <div class="hero-section">
@@ -1132,9 +1129,10 @@ elif menu == "Clubs":
         {"name": "💪 Fitness Club", "members": 178, "events": 10, "joined": st.session_state.clubs['Fitness Club']['joined']}
     ]
     
+    # Row 1: Coffee, Beauty, Sneaker
     col1, col2, col3 = st.columns(3)
-    for idx, club in enumerate(clubs):
-        with [col1, col2, col3][idx % 3]:
+    for idx, club in enumerate(clubs[:3]):
+        with [col1, col2, col3][idx]:
             status = "✅ Joined" if club['joined'] else "🔘 Join Now"
             color = "#2ecc71" if club['joined'] else "#e74c3c"
             st.markdown(f"""
@@ -1147,109 +1145,55 @@ elif menu == "Clubs":
             </div>
             """, unsafe_allow_html=True)
             if not club['joined']:
-                if st.button(f"Join", key=f"join_{club['name']}"):
-                    club_name = club['name'].replace("☕ ", "").replace("💄 ", "").replace("👟 ", "").replace("🐾 ", "").replace("👨‍👩‍👧‍👦 ", "").replace("🍽️ ", "").replace("🎮 ", "").replace("💪 ", "")
+                club_name = club['name'].replace("☕ ", "").replace("💄 ", "").replace("👟 ", "").replace("🐾 ", "").replace("👨‍👩‍👧‍👦 ", "").replace("🍽️ ", "").replace("🎮 ", "").replace("💪 ", "")
+                if st.button(f"Join", key=f"join1_{club_name}"):
                     st.session_state.clubs[club_name]['joined'] = True
                     st.success(f"✅ Joined {club['name']}!")
                     st.rerun()
-
-# ============================================
-# FOR BRANDS
-# ============================================
-elif menu == "For Brands":
-    st.markdown("""
-    <div class="hero-section">
-        <h1>🏢 For Brands</h1>
-        <p class="subtitle">Launch campaigns and measure real engagement</p>
-        <p class="tagline">Clear ROI instead of vague advertising metrics</p>
-    </div>
-    """, unsafe_allow_html=True)
     
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">👥</div>
-            <h3>1,247</h3>
-            <p class="label">Total Attendees</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">🚀</div>
-            <h3>12</h3>
-            <p class="label">Active Campaigns</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">📊</div>
-            <h3>87%</h3>
-            <p class="label">Avg. Redemption Rate</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with col4:
-        st.markdown("""
-        <div class="metric-card-enhanced">
-            <div class="icon">⭐</div>
-            <h3>4.7</h3>
-            <p class="label">Avg. Rating</p>
-        </div>
-        """, unsafe_allow_html=True)
+    # Row 2: Pet, Parents, Foodies
+    col4, col5, col6 = st.columns(3)
+    for idx, club in enumerate(clubs[3:6]):
+        with [col4, col5, col6][idx]:
+            status = "✅ Joined" if club['joined'] else "🔘 Join Now"
+            color = "#2ecc71" if club['joined'] else "#e74c3c"
+            st.markdown(f"""
+            <div class="club-card">
+                <span style="font-size:2.5rem;">{club['name'].split()[0]}</span>
+                <h3>{club['name']}</h3>
+                <p class="member-count">👥 {club['members']:,} members</p>
+                <p class="event-count">🎯 {club['events']} upcoming events</p>
+                <p style="margin-top:0.5rem; font-weight:700; color:{color};">{status}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if not club['joined']:
+                club_name = club['name'].replace("☕ ", "").replace("💄 ", "").replace("👟 ", "").replace("🐾 ", "").replace("👨‍👩‍👧‍👦 ", "").replace("🍽️ ", "").replace("🎮 ", "").replace("💪 ", "")
+                if st.button(f"Join", key=f"join2_{club_name}"):
+                    st.session_state.clubs[club_name]['joined'] = True
+                    st.success(f"✅ Joined {club['name']}!")
+                    st.rerun()
     
-    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
-    st.markdown("### 🚀 Create New Campaign")
-    
-    with st.form("campaign_form"):
-        col1, col2 = st.columns(2)
-        with col1:
-            campaign_name = st.text_input("Campaign Name", "Summer Launch 2026")
-            brand_name = st.text_input("Brand Name", "Your Brand")
-            category = st.selectbox("Category", ["Beauty", "Fashion", "Food", "Coffee", "Fitness", "Tech", "Luxury"])
-            location = st.text_input("Location", "Dubai Mall")
-        with col2:
-            start_date = st.date_input("Start Date", datetime.now())
-            end_date = st.date_input("End Date", datetime.now() + timedelta(days=7))
-            capacity = st.number_input("Capacity", min_value=10, max_value=500, value=50)
-            budget = st.number_input("Budget (AED)", min_value=1000, value=5000)
-        
-        target_audience = st.multiselect(
-            "Target Audience",
-            ["Beauty Club", "Coffee Club", "Sneaker Club", "Pet Club", "Parents Club", "Foodies Club", "Gamers Club", "Fitness Club"]
-        )
-        
-        submitted = st.form_submit_button("🚀 Launch Campaign", type="primary")
-        if submitted:
-            st.success("✅ Campaign created successfully! Your experience is now live.")
-            st.balloons()
-    
-    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
-    st.markdown("### 📊 Campaign Performance")
-    
-    data = pd.DataFrame({
-        'Week': ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-        'Reservations': [45, 67, 89, 102],
-        'Attendees': [38, 55, 72, 85],
-        'Redemptions': [30, 48, 61, 72]
-    })
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=data['Week'], y=data['Reservations'], name='Reservations', mode='lines+markers', line=dict(color='#e74c3c', width=3), marker=dict(size=10)))
-    fig.add_trace(go.Scatter(x=data['Week'], y=data['Attendees'], name='Attendees', mode='lines+markers', line=dict(color='#3498db', width=3), marker=dict(size=10)))
-    fig.add_trace(go.Scatter(x=data['Week'], y=data['Redemptions'], name='Redemptions', mode='lines+markers', line=dict(color='#2ecc71', width=3), marker=dict(size=10)))
-    fig.update_layout(
-        title='Campaign Performance Trends',
-        xaxis_title='Time Period',
-        yaxis_title='Number of Users',
-        height=400,
-        template='plotly_white',
-        hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
+    # Row 3: Gamers, Fitness
+    col7, col8 = st.columns(2)
+    for idx, club in enumerate(clubs[6:8]):
+        with [col7, col8][idx]:
+            status = "✅ Joined" if club['joined'] else "🔘 Join Now"
+            color = "#2ecc71" if club['joined'] else "#e74c3c"
+            st.markdown(f"""
+            <div class="club-card">
+                <span style="font-size:2.5rem;">{club['name'].split()[0]}</span>
+                <h3>{club['name']}</h3>
+                <p class="member-count">👥 {club['members']:,} members</p>
+                <p class="event-count">🎯 {club['events']} upcoming events</p>
+                <p style="margin-top:0.5rem; font-weight:700; color:{color};">{status}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if not club['joined']:
+                club_name = club['name'].replace("☕ ", "").replace("💄 ", "").replace("👟 ", "").replace("🐾 ", "").replace("👨‍👩‍👧‍👦 ", "").replace("🍽️ ", "").replace("🎮 ", "").replace("💪 ", "")
+                if st.button(f"Join", key=f"join3_{club_name}"):
+                    st.session_state.clubs[club_name]['joined'] = True
+                    st.success(f"✅ Joined {club['name']}!")
+                    st.rerun()
 # ============================================
 # TESTIMONIALS
 # ============================================
